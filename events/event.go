@@ -49,7 +49,7 @@ type CBEvent struct {
 	ParentID string
 }
 
-type CallbackFunc func(CBEvent)
+type CallbackFunc func(CBEvent) string
 
 // GetLeafEvents returns a list of leaf events.
 func GetLeafEvents() []Event {
