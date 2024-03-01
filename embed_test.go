@@ -1,15 +1,17 @@
-package llamaindexgo
+package llamaindexgo_test
 
 import (
 	"context"
 	"testing"
+
+	. "github.com/sansmoraxz/llama-index-go"
 )
 
 type testVectorSimilarityType struct {
 	mode     SimilarityMode
-	vector1  []float
-	vector2  []float
-	expected float
+	vector1  []float64
+	vector2  []float64
+	expected float64
 	isError  bool
 }
 
@@ -17,44 +19,44 @@ var testCases = []testVectorSimilarityType{
 	// Test cases that pass
 	{
 		mode:     COSINE,
-		vector1:  []float{1, 2, 3},
-		vector2:  []float{1, 2, 3},
+		vector1:  []float64{1, 2, 3},
+		vector2:  []float64{1, 2, 3},
 		expected: 1.0,
 		isError:  false,
 	},
 	{
 		mode:     COSINE,
-		vector1:  []float{1, 2, 3},
-		vector2:  []float{3, 2, 1},
+		vector1:  []float64{1, 2, 3},
+		vector2:  []float64{3, 2, 1},
 		expected: 0.7142857142857143,
 		isError:  false,
 	},
 	{
 		mode:     DOT,
-		vector1:  []float{1, 2, 3},
-		vector2:  []float{1, 2, 3},
+		vector1:  []float64{1, 2, 3},
+		vector2:  []float64{1, 2, 3},
 		expected: 14.0,
 		isError:  false,
 	},
 	{
 		mode:     DOT,
-		vector1:  []float{1, 2, 3},
-		vector2:  []float{3, 2, 1},
+		vector1:  []float64{1, 2, 3},
+		vector2:  []float64{3, 2, 1},
 		expected: 10.0,
 		isError:  false,
 	},
 
 	{
 		mode:     EUCLIDEAN,
-		vector1:  []float{1, 2, 3},
-		vector2:  []float{1, 2, 3},
+		vector1:  []float64{1, 2, 3},
+		vector2:  []float64{1, 2, 3},
 		expected: 0.0,
 		isError:  false,
 	},
 	{
 		mode:     EUCLIDEAN,
-		vector1:  []float{1, 2, 3},
-		vector2:  []float{3, 2, 1},
+		vector1:  []float64{1, 2, 3},
+		vector2:  []float64{3, 2, 1},
 		expected: 2.8284271247461903,
 		isError:  false,
 	},
@@ -62,22 +64,22 @@ var testCases = []testVectorSimilarityType{
 	// Empty vectors
 	{
 		mode:     COSINE,
-		vector1:  []float{},
-		vector2:  []float{},
+		vector1:  []float64{},
+		vector2:  []float64{},
 		expected: 0.0,
 		isError:  true,
 	},
 	{
 		mode:     DOT,
-		vector1:  []float{},
-		vector2:  []float{},
+		vector1:  []float64{},
+		vector2:  []float64{},
 		expected: 0.0,
 		isError:  true,
 	},
 	{
 		mode:     EUCLIDEAN,
-		vector1:  []float{},
-		vector2:  []float{},
+		vector1:  []float64{},
+		vector2:  []float64{},
 		expected: 0.0,
 		isError:  true,
 	},
@@ -85,22 +87,22 @@ var testCases = []testVectorSimilarityType{
 	// Different length
 	{
 		mode:     COSINE,
-		vector1:  []float{1, 2, 3},
-		vector2:  []float{1, 2, 3, 4},
+		vector1:  []float64{1, 2, 3},
+		vector2:  []float64{1, 2, 3, 4},
 		expected: 0.0,
 		isError:  true,
 	},
 	{
 		mode:     DOT,
-		vector1:  []float{1, 2, 3},
-		vector2:  []float{1, 2, 3, 4},
+		vector1:  []float64{1, 2, 3},
+		vector2:  []float64{1, 2, 3, 4},
 		expected: 0.0,
 		isError:  true,
 	},
 	{
 		mode:     EUCLIDEAN,
-		vector1:  []float{1, 2, 3},
-		vector2:  []float{1, 2, 3, 4},
+		vector1:  []float64{1, 2, 3},
+		vector2:  []float64{1, 2, 3, 4},
 		expected: 0.0,
 		isError:  true,
 	},
