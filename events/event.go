@@ -4,6 +4,10 @@ import "time"
 
 type Event string
 
+func (e Event) String() string {
+	return string(e)
+}
+
 const (
 	// CHUNKING logs for the before and after of text splitting.
 	CHUNKING Event = "chunking"
@@ -35,11 +39,26 @@ const (
 	AGENT_STEP Event = "agent_step"
 )
 
-// CBEvent is a callback event.
-type CBEvent struct {
+type EventStatus string
+
+const (
+	// START is the start of an event.
+	START EventStatus = "start"
+	// END is the end of an event.
+	END EventStatus = "end"
+)
+
+
+// This is used by the callback system to lookup and dispatch events.
+type CBEventKey struct {
 	// Type is the type of event.
 	Type Event
-	// Payload is the data associated with the event.
+	// Status is the status of the event.
+	Status EventStatus
+}
+
+type CBEventData struct {
+	// Payload is the data for the event.
 	Payload interface{}
 	// Time is the time the event occurred.
 	Time time.Time
@@ -47,6 +66,12 @@ type CBEvent struct {
 	ID string
 	// ParentID is the unique identifier for the parent event.
 	ParentID string
+}
+
+// CBEvent is a callback event.
+type CBEvent struct {
+	CBEventKey
+	CBEventData
 }
 
 type CallbackFunc func(CBEvent) string
