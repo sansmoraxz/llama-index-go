@@ -8,8 +8,6 @@ import (
 
 type float = float64
 
-type Embedding = []float
-
 type SimilarityMode = int
 
 const (
@@ -18,20 +16,27 @@ const (
 	EUCLIDEAN
 )
 
-type Embedder interface {
+type TextEmbedder interface {
 	Generator
 	// EmbedQuery generates an embedding for the given query
-	EmbedQuery(context.Context, string) (Embedding, error)
+	EmbedQuery(ctx context.Context, query string) ([]float, error)
 
 	// EmbedQueries generates embeddings for the given queries
-	EmbedQueries(context.Context, []string) ([]Embedding, error)
+	EmbedQueries(ctx  context.Context, queries []string) ([][]float, error)
 
 	// EmbedText generates an embedding for the given text
-	EmbedText(context.Context, string) (Embedding, error)
+	EmbedText(ctx context.Context, text string) ([]float, error)
 
 	// EmbedTexts generates embeddings for the given texts
-	EmbedTexts(context.Context, []string) ([]Embedding, error)
+	EmbedTexts(ctx  context.Context, texts []string) ([][]float, error)
 }
+
+type MultiModelTextImageEmbedder interface {
+	Generator
+	// EmbedTextAndImage generates an embedding for the given text and image (base64 encoded)
+	EmbedTextAndImage(ctx context.Context, text string, image string) ([]float, error)
+}
+
 
 func cosineSimilarity(x, y []float) (float, error) {
 	if len(x) == 0 || len(y) == 0 {
@@ -83,7 +88,7 @@ func euclideanDistance(x, y []float) (float, error) {
 }
 
 // Similarity returns the similarity between two embeddings
-func Similarity(ctx context.Context, mode SimilarityMode, e1 Embedding, e2 Embedding) (float, error) {
+func Similarity(ctx context.Context, mode SimilarityMode, e1 []float, e2 []float) (float, error) {
 	ch := make(chan float)
 	errCh := make(chan error)
 
