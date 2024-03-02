@@ -18,16 +18,19 @@ const (
 	EUCLIDEAN
 )
 
-type EmbedOpts map[string]interface{}
-
 type Embedder interface {
-	EmbedQuery(context.Context, string, ...EmbedOpts) (Embedding, error)
+	Generator
+	// EmbedQuery generates an embedding for the given query
+	EmbedQuery(context.Context, string) (Embedding, error)
 
-	EmbedQueries(context.Context, []string, ...EmbedOpts) ([]Embedding, error)
+	// EmbedQueries generates embeddings for the given queries
+	EmbedQueries(context.Context, []string) ([]Embedding, error)
 
-	EmbedText(context.Context, string, ...EmbedOpts) (Embedding, error)
+	// EmbedText generates an embedding for the given text
+	EmbedText(context.Context, string) (Embedding, error)
 
-	EmbedTexts(context.Context, []string, ...EmbedOpts) ([]Embedding, error)
+	// EmbedTexts generates embeddings for the given texts
+	EmbedTexts(context.Context, []string) ([]Embedding, error)
 }
 
 func cosineSimilarity(x, y []float) (float, error) {
