@@ -100,3 +100,17 @@ func (b *Bedrock) EmbedQueries(ctx context.Context, queries []string) ([][]float
 
 // check that Bedrock implements llamaindexgo.TextEmbedder
 var _ llamaindexgo.TextEmbedder = &Bedrock{}
+
+
+// EmbedTextAndImage implements llamaindexgo.MultiModelTextImageEmbedder.
+func (b *Bedrock) EmbedTextAndImage(ctx context.Context, text string, image string) ([]float64, error) {
+	provider, modelName := b.splitModelId()
+	if provider == PROVIDER_AMAZON {
+		return FetchAmazonMultiModalEmbeddings(ctx, b.Client, modelName, text, image)
+	}
+	return nil, fmt.Errorf("unknown provider: %s", provider)
+}
+
+
+// check that Bedrock implements llamaindexgo.MultiModelTextImageEmbedder
+var _ llamaindexgo.MultiModelTextImageEmbedder = &Bedrock{}
